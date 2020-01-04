@@ -57,6 +57,12 @@ public class AdminController {
             return ResponseEntity.ok(applicationUserRepository.findAll());
     }
 
+    @PostMapping(path = "/register")
+    public ResponseEntity<String> createAdmin(@RequestHeader HttpHeaders headers, @Valid @RequestBody List<Admin> adm) {
+        List<Admin> result = applicationUserRepository.saveAll(adm);
+        return ResponseEntity.ok(result.stream().map(c -> String.valueOf(c.getId())).collect(joining(",")));
+
+    }
 
     private void authenticate(String username, String password) throws Exception {
         try {
