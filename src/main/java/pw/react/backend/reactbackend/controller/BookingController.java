@@ -83,7 +83,7 @@ public class BookingController {
         return ResponseEntity.badRequest().body(Collections.emptyList());
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PutMapping(path = "/{BookingId}")
     public ResponseEntity<Booking> updateBooking(@RequestHeader HttpHeaders headers,
                                                      @PathVariable Long BookingId,
@@ -97,7 +97,7 @@ public class BookingController {
             return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @DeleteMapping(path = "/{BookingId}")
     public ResponseEntity<String> deleteBooking(@RequestHeader HttpHeaders headers, @PathVariable Long BookingId) {
         logHeaders(headers);
