@@ -103,7 +103,7 @@ public class BookingController {
             if (!deleted) {
                 return ResponseEntity.badRequest().body(String.format("Booking with id %s does not exists.", BookingId));
             }
-            return ResponseEntity.ok(String.format("Parking with id %s deleted.", BookingId));
+            return ResponseEntity.ok(String.format("Booking with id %s deleted.", BookingId));
 
     }
 

@@ -13,7 +13,7 @@ class ParkingServiceImpl implements ParkingService {
 
     private ParkingRepository repository;
 
-    ParkingServiceImpl() { /*Needed only for initializing spy in unit tests*/}
+    ParkingServiceImpl() { }
 
     @Autowired
     ParkingServiceImpl(ParkingRepository repository) {

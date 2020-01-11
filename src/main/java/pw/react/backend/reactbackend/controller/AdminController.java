@@ -56,7 +56,7 @@ public class AdminController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    //@PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping(path = "")
     public ResponseEntity<Collection<Admin>> getAllAdminsActivity(@RequestHeader HttpHeaders headers,
                                                           @RequestParam(required = false) String filter) {
