@@ -66,8 +66,7 @@ public class ParkingSpotController {
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(path = "")
-    public ResponseEntity<MappingJacksonValue> getAllParkingSpots(@RequestHeader HttpHeaders headers,
-                                                                      @RequestParam(value = "fields") String fields)
+    public ResponseEntity<MappingJacksonValue> getAllParkingSpots(@RequestHeader HttpHeaders headers)
     {
         logHeaders(headers);
         MappingJacksonValue wrapper = new MappingJacksonValue(repository.findAll());

@@ -48,8 +48,19 @@ public class Booking implements Serializable {
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     private LocalDateTime endDate;
-
     @Column(name = "active")
     private boolean active;
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+    public ParkingSpot getParkingSpotId() {return parkingSpotId; }
 
 }

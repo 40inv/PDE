@@ -18,6 +18,8 @@ public class ParkingSpot implements Serializable {
 
     public static ParkingSpot EMPTY = new ParkingSpot();
 
+
+
     @Id
     @Column(name="parkingSpotId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +30,5 @@ public class ParkingSpot implements Serializable {
     @Column(name = "placeNumber")
     private int placeNumber;
 
+    public int getParkingSpotId() {return (int)id;}
 }

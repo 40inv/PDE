@@ -3,6 +3,7 @@ package pw.react.backend.reactbackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,7 @@ import pw.react.backend.reactbackend.service.JwtUserDetailsService;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
@@ -55,12 +57,21 @@ public class AdminController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping(path = "") // For testing only and will be deleted
-    public ResponseEntity<Collection<Admin>> getAllAdmins(@RequestHeader HttpHeaders headers) {
+    @GetMapping(path = "")
+    public ResponseEntity<Collection<Admin>> getAllAdminsActivity(@RequestHeader HttpHeaders headers,
+                                                          @RequestParam(required = false) String filter) {
+        if(filter == null)
             return ResponseEntity.ok(applicationUserRepository.findAll());
+        else {
+            if (filter.equals("active"))
+                return ResponseEntity.ok(applicationUserRepository.findAdminsByActivity(true));
+            else if (filter.equals("inactive"))
+                return ResponseEntity.ok(applicationUserRepository.findAdminsByActivity(false));
+        }
+        return ResponseEntity.badRequest().body(Collections.emptyList());
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    //@PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping(path = "/register")
     public ResponseEntity<String> createAdmin(@RequestHeader HttpHeaders headers, @Valid @RequestBody List<Admin> adm) {
         List<Admin> result = applicationUserRepository.saveAll(adm);

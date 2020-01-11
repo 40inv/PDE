@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "Admin")
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Admin {
+public class Admin implements Serializable {
 
     public static Admin EMPTY = new Admin();
 

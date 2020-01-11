@@ -3,6 +3,7 @@ package pw.react.backend.reactbackend.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,8 +12,11 @@ import pw.react.backend.reactbackend.dao.BookingRepository;
 import pw.react.backend.reactbackend.model.Booking;
 import pw.react.backend.reactbackend.service.BookingService;
 
+import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
@@ -34,10 +38,16 @@ public class BookingController {
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping(path = "")
-    public ResponseEntity<String> createBookings(@RequestHeader HttpHeaders headers, @Valid @RequestBody List<Booking> bookings) {
+    public ResponseEntity<String> createBookings(@RequestHeader HttpHeaders headers, @Valid @RequestBody Booking booking) {
         logHeaders(headers);
-            List<Booking> result = repository.saveAll(bookings);
-            return ResponseEntity.ok(result.stream().map(c -> String.valueOf(c.getId())).collect(joining(",")));
+
+        //if(repository.checkOverlappingDates(booking.getStartDate())> 0)//)
+               //String.valueOf(booking.getEndDate()))) > 0)
+            if(repository.checkOverlappingDates(booking.getStartDate(),
+                  booking.getEndDate(),booking.getParkingSpotId()) > 0)
+           return ResponseEntity.badRequest().body("Date overlapping");
+        Booking result = repository.save(booking);
+        return ResponseEntity.ok(Long.toString(result.getId()));
     }
 
     private void logHeaders(@RequestHeader HttpHeaders headers) {
@@ -59,9 +69,18 @@ public class BookingController {
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(path = "")
-    public ResponseEntity<Collection<Booking>> getAllBookings(@RequestHeader HttpHeaders headers) {
+    public ResponseEntity<Collection<Booking>> getAllBookingsActivity(@RequestHeader HttpHeaders headers,
+                                                                  @RequestParam(required = false) String filter) {
         logHeaders(headers);
+        if(filter == null)
             return ResponseEntity.ok(repository.findAll());
+        else {
+            if (filter.equals("active"))
+                return ResponseEntity.ok(repository.findBookingsByActivity(true));
+            else if (filter.equals("inactive"))
+                return ResponseEntity.ok(repository.findBookingsByActivity(false));
+        }
+        return ResponseEntity.badRequest().body(Collections.emptyList());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")

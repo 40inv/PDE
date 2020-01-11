@@ -14,6 +14,7 @@ import pw.react.backend.reactbackend.service.ParkingService;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
@@ -59,9 +60,18 @@ public class ParkingController {
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(path = "")
-    public ResponseEntity<Collection<Parking>> getAllParkings(@RequestHeader HttpHeaders headers) {
+    public ResponseEntity<Collection<Parking>> getAllParkingsActivity(@RequestHeader HttpHeaders headers,
+                                                                      @RequestParam(required = false) String filter) {
         logHeaders(headers);
-        return ResponseEntity.ok(repository.findAll());
+        if(filter == null)
+            return ResponseEntity.ok(repository.findAll());
+        else {
+            if (filter.equals("active"))
+                return ResponseEntity.ok(repository.findParkingsByActivity(true));
+            else if (filter.equals("inactive"))
+                return ResponseEntity.ok(repository.findParkingsByActivity(false));
+        }
+        return ResponseEntity.badRequest().body(Collections.emptyList());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
