@@ -41,11 +41,9 @@ public class BookingController {
     public ResponseEntity<String> createBookings(@RequestHeader HttpHeaders headers, @Valid @RequestBody Booking booking) {
         logHeaders(headers);
 
-        //if(repository.checkOverlappingDates(booking.getStartDate())> 0)//)
-               //String.valueOf(booking.getEndDate()))) > 0)
             if(repository.checkOverlappingDates(booking.getStartDate(),
                   booking.getEndDate(),booking.getParkingSpotId()) > 0)
-           return ResponseEntity.badRequest().body("Date overlapping");
+           return ResponseEntity.badRequest().body("Date overlap");
         Booking result = repository.save(booking);
         return ResponseEntity.ok(Long.toString(result.getId()));
     }
