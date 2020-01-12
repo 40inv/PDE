@@ -56,7 +56,7 @@ public class AdminController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping(path = "")
     public ResponseEntity<Collection<Admin>> getAllAdminsActivity(@RequestHeader HttpHeaders headers,
                                                           @RequestParam(required = false) String filter) {
@@ -71,7 +71,7 @@ public class AdminController {
         return ResponseEntity.badRequest().body(Collections.emptyList());
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping(path = "/register")
     public ResponseEntity<String> createAdmin(@RequestHeader HttpHeaders headers, @Valid @RequestBody List<Admin> adm) {
         List<Admin> result = applicationUserRepository.saveAll(adm);
