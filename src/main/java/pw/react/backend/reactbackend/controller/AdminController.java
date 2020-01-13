@@ -52,8 +52,13 @@ public class AdminController {
     @PostMapping(path = "")
     public ResponseEntity<?> createAdmin(@RequestHeader HttpHeaders headers, @Valid @RequestBody Admin adm) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(adm.getUsername());
-        String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        if (userDetails.getPassword().equals(adm.getPassword()))
+        {
+            String token = jwtTokenUtil.generateToken(userDetails);
+            return ResponseEntity.ok(new JwtResponse(token));
+        }
+        else
+            return new ResponseEntity<String>("Unauthorized", HttpStatus.UNAUTHORIZED);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
