@@ -31,4 +31,5 @@ public class ParkingSpot implements Serializable {
     private int placeNumber;
 
     public int getParkingSpotId() {return (int)id;}
+    public int getPlaceNumber() {return placeNumber;}
 }

@@ -37,5 +37,6 @@ public class Parking implements Serializable {
     @Column(name = "active", nullable = false)
     private boolean active;
 
+    public int getParkingId() {return Math.toIntExact(id);}
 
 }

@@ -4,55 +4,47 @@ package pw.react.backend.reactbackend.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Data;
 import pw.react.backend.reactbackend.utils.JsonDateDeserializer;
 import pw.react.backend.reactbackend.utils.JsonDateSerializer;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "Booking")
-@Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Booking implements Serializable {
+public class BookingDTO {
 
-    public static Booking EMPTY = new Booking();
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToOne
-    @JoinColumn(name = "parkingId", nullable = false)
-    private Parking parkingId;
-    @ManyToOne
-    @JoinColumn(name = "parkingSpotId", nullable = false)
-    private ParkingSpot parkingSpotId;
-    @Column(name = "userId", nullable = false)
+    private int parkingId;
+    private int parkingSpotId;
+    private int placeNumber;
     private int userId;
-
-    @Column(name = "bookDate", nullable = false)
+    private int paidAmount;
+    private boolean active;
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     private LocalDateTime bookDate;
-
-    @Column(name = "paidAmount", nullable = false)
-    private int paidAmount;
-
-    @Column(name = "startDate", nullable = false)
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     private LocalDateTime startDate;
-    @Column(name = "endDate", nullable = false)
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     private LocalDateTime endDate;
-    @Column(name = "active")
-    private boolean active;
 
-    public Parking getParkingId() {return parkingId;}
-    public ParkingSpot getParkingSpotId() {return parkingSpotId; }
+    public BookingDTO(Booking booking) {
+        this.id = booking.getId();
+        this.parkingId = booking.getParkingId().getParkingId();
+        this.parkingSpotId = booking.getParkingSpotId().getParkingSpotId();
+        this.placeNumber = booking.getParkingSpotId().getPlaceNumber();
+        this.userId = booking.getUserId();
+        this.paidAmount = booking.getPaidAmount();
+        this.active = booking.getActive();
+        this.bookDate = booking.getBookDate();
+        this.startDate = booking.getStartDate();
+        this.endDate = booking.getEndDate();
+    }
+
+    public int getParkingId() {return parkingId;}
+    public int getParkingSpotId() {return parkingSpotId; }
     public LocalDateTime getStartDate() {
         return startDate;
     }
@@ -66,6 +58,8 @@ public class Booking implements Serializable {
     }
     public int getUserId() {return userId;}
     public int getPaidAmount() {return paidAmount;}
+    public int getPlaceNumber() {return placeNumber;}
     public boolean getActive() {return active;}
+
 
 }

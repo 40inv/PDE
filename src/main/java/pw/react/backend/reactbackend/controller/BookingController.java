@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pw.react.backend.reactbackend.dao.BookingRepository;
 import pw.react.backend.reactbackend.model.Booking;
+import pw.react.backend.reactbackend.model.BookingDTO;
 import pw.react.backend.reactbackend.service.BookingService;
 
 import javax.swing.text.html.parser.Entity;
@@ -18,6 +19,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
 @CrossOrigin(origins = { "http://localhost:3000" })
@@ -59,40 +61,53 @@ public class BookingController {
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(path = "/{BookingId}")
-    public ResponseEntity<Booking> getBooking(@RequestHeader HttpHeaders headers,
+    public ResponseEntity<BookingDTO> getBooking(@RequestHeader HttpHeaders headers,
                                                   @PathVariable Long BookingId) {
         logHeaders(headers);
-            return ResponseEntity.ok(repository.findById(BookingId).orElseGet(() -> Booking.EMPTY));
+        BookingDTO response = new BookingDTO(repository.findById(BookingId).orElseGet(() -> Booking.EMPTY));
+        return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping(path = "")
-    public ResponseEntity<Collection<Booking>> getAllBookingsActivity(@RequestHeader HttpHeaders headers,
+    public ResponseEntity<Collection<BookingDTO>> getAllBookingsActivity(@RequestHeader HttpHeaders headers,
                                                                   @RequestParam(required = false) String filter) {
         logHeaders(headers);
-        if(filter == null)
-            return ResponseEntity.ok(repository.findAll());
+        Collection<Booking> result;
+        Collection<BookingDTO> response;
+        if(filter == null) {
+            result = repository.findAll();
+            response = mapB2B(result);
+            return ResponseEntity.ok(response);
+        }
         else {
-            if (filter.equals("active"))
-                return ResponseEntity.ok(repository.findBookingsByActivity(true));
-            else if (filter.equals("inactive"))
-                return ResponseEntity.ok(repository.findBookingsByActivity(false));
+            if (filter.equals("active")) {
+                result = repository.findBookingsByActivity(true);
+                response = mapB2B(result);
+                return ResponseEntity.ok(response);
+            }
+            else if (filter.equals("inactive")) {
+                result = repository.findBookingsByActivity(false);
+                response = mapB2B(result);
+                return ResponseEntity.ok(response);
+            }
         }
         return ResponseEntity.badRequest().body(Collections.emptyList());
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PutMapping(path = "/{BookingId}")
-    public ResponseEntity<Booking> updateBooking(@RequestHeader HttpHeaders headers,
+    public ResponseEntity<BookingDTO> updateBooking(@RequestHeader HttpHeaders headers,
                                                      @PathVariable Long BookingId,
                                                      @RequestBody Booking updatedParkingSpot) {
         logHeaders(headers);
         Booking result;
             result = BookingService.updateBooking(BookingId, updatedParkingSpot);
             if (Booking.EMPTY.equals(result)) {
-                return ResponseEntity.badRequest().body(updatedParkingSpot);
+                return ResponseEntity.badRequest().body(null);
             }
-            return ResponseEntity.ok(result);
+        BookingDTO response = new BookingDTO(result);
+            return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -107,4 +122,12 @@ public class BookingController {
 
     }
 
+    private Collection<BookingDTO> mapB2B(Collection<Booking> result) {
+        Collection<BookingDTO> response;
+        response = result.stream().map(objA -> {
+            BookingDTO objB = new BookingDTO(objA);
+            return objB;
+        }).collect(Collectors.toList());
+        return response;
+    }
 }
