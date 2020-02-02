@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
-@CrossOrigin(origins = { "http://localhost:3000"})
+@CrossOrigin(origins = {"https://parklytest.netlify.com/" })
 @RestController
-@RequestMapping(path = "/ParkingSpot")
+@RequestMapping(path = "/parkingSpot")
 public class ParkingSpotController {
 
     private final Logger logger = LoggerFactory.getLogger(ParkingSpotController.class);

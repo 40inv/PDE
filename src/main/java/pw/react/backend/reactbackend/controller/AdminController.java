@@ -26,7 +26,7 @@ import java.util.List;
 import static java.util.stream.Collectors.joining;
 
 
-@CrossOrigin(origins = { "http://localhost:3000" })
+@CrossOrigin(origins = { "https://parklytest.netlify.com/" })
 @RestController
 @RequestMapping(path = "/admin")
 public class AdminController {
@@ -35,31 +35,11 @@ public class AdminController {
     private AdminService AdminService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
-
-    @Autowired
-    public AdminController(AdminRepository repository, AdminService BookingService) {
+    public AdminController(AdminRepository repository, AdminService AdminService) {
         this.applicationUserRepository = repository;
         this.AdminService = AdminService;
     }
 
-    @PostMapping(path = "")
-    public ResponseEntity<?> createAdmin(@RequestHeader HttpHeaders headers, @Valid @RequestBody Admin adm) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(adm.getUsername());
-        if (userDetails.getPassword().equals(adm.getPassword()))
-        {
-            String token = jwtTokenUtil.generateToken(userDetails);
-            return ResponseEntity.ok(new JwtResponse(token));
-        }
-        else
-            return new ResponseEntity<String>("Unauthorized", HttpStatus.UNAUTHORIZED);
-    }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping(path = "")
@@ -76,22 +56,6 @@ public class AdminController {
         return ResponseEntity.badRequest().body(Collections.emptyList());
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @PostMapping(path = "/register")
-    public ResponseEntity<String> createAdmin(@RequestHeader HttpHeaders headers, @Valid @RequestBody List<Admin> adm) {
-        List<Admin> result = applicationUserRepository.saveAll(adm);
-        return ResponseEntity.ok(result.stream().map(c -> String.valueOf(c.getId())).collect(joining(",")));
 
-    }
-
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
-        }
-    }
 
 }

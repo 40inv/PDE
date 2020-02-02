@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pw.react.backend.reactbackend.dao.BookingRepository;
+import pw.react.backend.reactbackend.dao.ParkingRepository;
 import pw.react.backend.reactbackend.model.Booking;
 import pw.react.backend.reactbackend.model.BookingDTO;
 import pw.react.backend.reactbackend.service.BookingService;
@@ -22,14 +23,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
-@CrossOrigin(origins = { "http://localhost:3000" })
+@CrossOrigin(origins = { "https://parklytest.netlify.com/" })
 @RestController
-@RequestMapping(path = "/Booking")
+@RequestMapping(path = "/booking")
 public class BookingController {
 
     private final Logger logger = LoggerFactory.getLogger(BookingController.class);
 
     private BookingRepository repository;
+    private ParkingRepository parkingRep;
     private BookingService BookingService;
 
     @Autowired
@@ -40,14 +42,15 @@ public class BookingController {
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping(path = "")
-    public ResponseEntity<String> createBookings(@RequestHeader HttpHeaders headers, @Valid @RequestBody Booking booking) {
+    public ResponseEntity<?> createBookings(@RequestHeader HttpHeaders headers, @Valid @RequestBody Booking booking) {
         logHeaders(headers);
 
             if(repository.checkOverlappingDates(booking.getStartDate(),
                   booking.getEndDate(),booking.getParkingSpotId()) > 0)
            return ResponseEntity.badRequest().body("Date overlap");
-        Booking result = repository.save(booking);
-        return ResponseEntity.ok(Long.toString(result.getId()));
+            Booking tempbook = repository.save(booking);
+        BookingDTO response = new BookingDTO(tempbook);
+        return ResponseEntity.ok(response);
     }
 
     private void logHeaders(@RequestHeader HttpHeaders headers) {
@@ -130,4 +133,6 @@ public class BookingController {
         }).collect(Collectors.toList());
         return response;
     }
+
+
 }

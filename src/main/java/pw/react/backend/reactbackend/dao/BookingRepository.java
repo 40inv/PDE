@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pw.react.backend.reactbackend.model.Booking;
+import pw.react.backend.reactbackend.model.Parking;
 import pw.react.backend.reactbackend.model.ParkingSpot;
 
 import java.math.BigInteger;
@@ -20,4 +21,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
    int checkOverlappingDates(@Param("fromDate") LocalDateTime fromDate,
                                    @Param("toDate") LocalDateTime toDate,
                                         @Param("parkingSpotId") ParkingSpot parkingSpotId);
+
 }

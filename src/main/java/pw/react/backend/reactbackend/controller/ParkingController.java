@@ -18,9 +18,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
-@CrossOrigin(origins = { "http://localhost:3000"})
+@CrossOrigin(origins = { "https://parklytest.netlify.com/" })
 @RestController
-@RequestMapping(path = "/Parking")
+@RequestMapping(path = "/parking")
 public class ParkingController {
 
     private final Logger logger = LoggerFactory.getLogger(ParkingController.class);
@@ -98,6 +98,7 @@ public class ParkingController {
             }
             return ResponseEntity.ok(String.format("Parking with id %s deleted.", ParkingId));
     }
+
 
 
 }
