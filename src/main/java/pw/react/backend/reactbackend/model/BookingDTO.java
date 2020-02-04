@@ -32,9 +32,9 @@ public class BookingDTO {
 
     public BookingDTO(Booking booking) {
         this.id = booking.getId();
-        this.parkingId = booking.getParkingId().getParkingId();
-        this.parkingSpotId = booking.getParkingSpotId().getParkingSpotId();
-        this.placeNumber = booking.getParkingSpotId().getPlaceNumber();
+        this.parkingId = booking.getParkingFromBooking().getParkingId();
+        this.parkingSpotId = booking.getParkingSpotFromBooking().getParkingSpotId();
+        this.placeNumber = booking.getParkingSpotFromBooking().getPlaceNumber();
         this.userId = booking.getUserId();
         this.paidAmount = booking.getPaidAmount();
         this.active = booking.getActive();

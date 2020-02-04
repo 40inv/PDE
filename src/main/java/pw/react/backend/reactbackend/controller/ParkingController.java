@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.joining;
-@CrossOrigin(origins = { "https://parklytest.netlify.com/" })
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/parking")
 public class ParkingController {

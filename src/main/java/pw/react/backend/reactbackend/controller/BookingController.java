@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
-@CrossOrigin(origins = { "https://parklytest.netlify.com/" })
+@CrossOrigin(origins =  "*" )
 @RestController
 @RequestMapping(path = "/booking")
 public class BookingController {
@@ -40,16 +40,21 @@ public class BookingController {
         this.BookingService = BookingService;
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')") //we do not validate payment amount
     @PostMapping(path = "")
     public ResponseEntity<?> createBookings(@RequestHeader HttpHeaders headers, @Valid @RequestBody Booking booking) {
         logHeaders(headers);
 
+        if(repository.checkIfSpotToParking(booking.getParkingFromBooking(),booking.getParkingSpotFromBooking().getParkingSpotId()) != 1)
+            return ResponseEntity.badRequest().body("Wrong parking spot or parking");
+
             if(repository.checkOverlappingDates(booking.getStartDate(),
-                  booking.getEndDate(),booking.getParkingSpotId()) > 0)
+                  booking.getEndDate(),booking.getParkingSpotFromBooking()) > 0)
            return ResponseEntity.badRequest().body("Date overlap");
-            Booking tempbook = repository.save(booking);
-        BookingDTO response = new BookingDTO(tempbook);
+
+
+
+        BookingDTO response = new BookingDTO(repository.save(booking));
         return ResponseEntity.ok(response);
     }
 

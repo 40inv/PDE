@@ -22,4 +22,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                    @Param("toDate") LocalDateTime toDate,
                                         @Param("parkingSpotId") ParkingSpot parkingSpotId);
 
+    @Query("Select COUNT(ps) from ParkingSpot ps " +
+            "where ps.id = :parkingSpotId and ps.parkingId = :parkingId")
+    int checkIfSpotToParking(@Param("parkingId") Parking parkingId,
+                              @Param("parkingSpotId") long parkingSpotId);
+
 }

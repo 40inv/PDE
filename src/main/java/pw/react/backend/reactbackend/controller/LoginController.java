@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 
-@CrossOrigin(origins = { "https://parklytest.netlify.com/" })
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/login")
 public class LoginController {
