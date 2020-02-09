@@ -1,2 +1,2 @@
-Aws: http://parklybe.us-east-1.elasticbeanstalk.com/ 
-To log in use post method with login and password and following link http://parklybe.us-east-1.elasticbeanstalk.com/admin
+Aws: http://parklybe2.us-east-1.elasticbeanstalk.com/
+To log in use post method with login and password and following link http://parklybe2.us-east-1.elasticbeanstalk.com/login
