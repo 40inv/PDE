@@ -1,2 +1,21 @@
-Aws: http://parklybe2.us-east-1.elasticbeanstalk.com/
-To log in use post method with login and password and following link http://parklybe2.us-east-1.elasticbeanstalk.com/login
+Backend part of Parkly.
+
+Links to other parts of the project.
+Mockup / prototype:
+https://drive.google.com/open?id=1Ul_l3UwphIPDuzanX9YDXuHYFnQKlGWs
+
+Web app url:
+https://parklyisthebest.netlify.com/login
+
+Mobile (url to mobile app published on Expo):
+https://expo.io/@denisgucj/expo-template-bare
+
+Frontend Code url:
+https://github.com/elif-pw/parkly
+
+Mobile Code url:
+https://github.com/DenisGUCJ/Parkly-React-Native-
+
+Necessary working credentails for mobile and web
+login: Brutal
+pass: Denizzz
